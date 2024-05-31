@@ -15,7 +15,7 @@ object Main extends IOApp.Simple {
     .all(ComputerRepository[IO]())
     .flatMap { routes =>
       val thePort = port"9000"
-      val theHost = host"localhost"
+      val theHost = host"0.0.0.0"
       val message =
         s"Server started on: $theHost:$thePort, press enter to stop"
 

@@ -35,6 +35,9 @@ lazy val root = (project in file("."))
       "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.27.6" % "provided",
       // Testing
       "org.scalatest"                %% "scalatest"                      % "3.2.18"   % Test,
-      "org.typelevel"                %% "cats-effect-testing-scalatest"  % "1.5.0"    % Test
+      "org.typelevel"                %% "cats-effect-testing-scalatest"  % "1.5.0"    % Test,
+      // SLF4J
+      "ch.qos.logback" % "logback-classic" % "1.3.5", // Logback classic for logging
+      "org.slf4j" % "slf4j-api" % "1.7.36" // SLF4J API
     )
   )
