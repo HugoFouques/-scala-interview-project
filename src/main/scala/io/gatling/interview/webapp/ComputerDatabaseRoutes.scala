@@ -28,4 +28,8 @@ class ComputerDatabaseRoutes(repository: ComputerRepository[IO])
   override def listComputers(): IO[ComputersOutput] = for {
     result <- repository.fetchAll()
   } yield ComputersOutput(result.map(transformComputer))
+
+  override def getComputer(id: Long): IO[Computer] = {
+    repository.fetch(id).map(transformComputer)
+  }
 }

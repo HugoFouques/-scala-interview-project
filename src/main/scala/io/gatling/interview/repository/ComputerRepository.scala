@@ -1,6 +1,8 @@
 package io.gatling.interview.repository
 
 import cats.effect._
+import cats.implicits._
+
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import com.github.plokhotnyuk.jsoniter_scala.macros._
 import io.gatling.interview.model.Computer
@@ -25,7 +27,15 @@ class ComputerRepository[F[_]: Async](filePath: Path) {
       Async[F].delay(readFromStream[List[Computer]](stream))
     }
 
-  def fetch(id: Long): F[Computer] = ???
+  def fetch(id: Long): F[Computer] = {
+    fetchAll()
+      .map { _.find(_.id == id) }
+      .flatMap {
+        case Some(computer) => Async[F].pure(computer)
+        case None =>
+          Async[F].raiseError(new NoSuchElementException(s"Computer with id $id not found"))
+      }
+  }
 
   def insert(computer: Computer): F[Unit] = ???
 }
