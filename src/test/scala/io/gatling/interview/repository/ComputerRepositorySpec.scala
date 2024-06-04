@@ -49,6 +49,57 @@ class ComputerRepositorySpec extends AsyncFlatSpec with AsyncIOSpec with Matcher
       .assertThrows[Exception]
   }
 
+  "ComputerRepository#fetch" should "retrieve one computers" in {
+    val expectedComputer =
+      Computer(id = 1, name = "MacBook Pro 15.4 inch", introduced = None, discontinued = None)
+
+    temporaryFileResource("computers/computers.json")
+      .use { computersFilePath =>
+        val repository = new ComputerRepository[IO](computersFilePath)
+        repository.fetch(1)
+      }
+      .asserting { fetchedComputers =>
+        fetchedComputers shouldBe expectedComputer
+      }
+  }
+
+  "ComputerRepository#fetch" should "fail if the JSON file is invalid" in {
+    temporaryFileResource("computers/computers-invalid.json")
+      .use { computersFilePath =>
+        val repository = new ComputerRepository[IO](computersFilePath)
+        repository.fetch(1)
+      }
+      .assertThrows[Exception]
+  }
+
+  "ComputerRepository#fetch" should "fail if the computer id doesn't exists" in {
+    temporaryFileResource("computers/computers-invalid.json")
+      .use { computersFilePath =>
+        val repository = new ComputerRepository[IO](computersFilePath)
+        repository.fetch(42)
+      }
+      .assertThrows[Exception]
+  }
+
+  "ComputerRepository#insert" should "insert one computer" in {
+    val expectedComputer =
+      Computer(
+        id = 4,
+        name = "Hugo's computer",
+        introduced = None,
+        discontinued = None
+      )
+
+    temporaryFileResource("computers/computers.json")
+      .use { computersFilePath =>
+        val repository = new ComputerRepository[IO](computersFilePath)
+        repository.insert(expectedComputer)
+      }
+      .asserting { createdComputers =>
+        createdComputers shouldBe expectedComputer
+      }
+  }
+
   private def temporaryFileResource(path: String): Resource[IO, Path] =
     Resource(
       for {
