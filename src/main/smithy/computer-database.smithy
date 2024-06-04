@@ -7,7 +7,11 @@ use alloy#simpleRestJson
 @simpleRestJson
 service ComputerDatabaseEndpoints {
     version: "1.0.0"
-    operations: [ListComputers, GetComputer]
+    operations: [
+        ListComputers
+        GetComputer
+        CreateComputer
+    ]
 }
 
 @readonly
@@ -20,6 +24,12 @@ operation ListComputers {
 @http(method: "GET", uri: "/computers/{id}", code: 200)
 operation GetComputer {
     input: GetComputerInput
+    output: Computer
+}
+
+@http(method: "POST", uri: "/computers", code: 201)
+operation CreateComputer {
+    input: CreateComputerInput
     output: Computer
 }
 
@@ -45,4 +55,17 @@ structure GetComputerInput {
     @required
     @httpLabel
     id: Long
+}
+
+structure CreateComputerInput {
+    @httpPayload
+    @required
+    content: CreateComputerPayload
+}
+
+structure CreateComputerPayload {
+    @required
+    name: String
+    introduced: String
+    discontinued: String
 }

@@ -37,5 +37,28 @@ class ComputerRepository[F[_]: Async](filePath: Path) {
       }
   }
 
-  def insert(computer: Computer): F[Unit] = ???
+  def insert(computer: Computer): F[Computer] = {
+    for {
+      currentList <-
+        fetchAll()
+
+      defaultId = 1.toLong
+      newId =
+        currentList
+          .map { _.id }
+          .maxOption
+          .fold(defaultId) { id => id + 1 }
+
+      newComputer = computer.copy(id = newId)
+      updatedComputers = currentList :+ newComputer
+
+      _ <-
+        Resource
+          .fromAutoCloseable(Async[F].delay(Files.newOutputStream(filePath)))
+          .use { stream =>
+            Async[F].delay(writeToStream(updatedComputers, stream))
+          }
+    } yield (newComputer)
+
+  }
 }

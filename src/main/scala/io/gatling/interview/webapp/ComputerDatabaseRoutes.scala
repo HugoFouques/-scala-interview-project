@@ -12,12 +12,21 @@ import java.time.format.DateTimeFormatter
 object ComputerDatabaseRoutes {
   private val localDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
   private def localDateToString(value: LocalDate): String = localDateFormatter.format(value)
+  private def stringToLocalDate(value: String): LocalDate =
+    LocalDate.parse(value, localDateFormatter)
 
-  private def transformComputer(value: model.Computer): api.Computer = api.Computer(
+  private def toApiComputer(value: model.Computer): api.Computer = api.Computer(
     id = value.id,
     name = value.name,
     introduced = value.introduced.map(localDateToString),
     discontinued = value.discontinued.map(localDateToString)
+  )
+
+  private def fromApiComputer(payload: api.CreateComputerPayload): model.Computer = model.Computer(
+    id = 0,
+    name = payload.name,
+    introduced = payload.introduced.map(stringToLocalDate),
+    discontinued = payload.discontinued.map(stringToLocalDate)
   )
 }
 
@@ -27,9 +36,13 @@ class ComputerDatabaseRoutes(repository: ComputerRepository[IO])
 
   override def listComputers(): IO[ComputersOutput] = for {
     result <- repository.fetchAll()
-  } yield ComputersOutput(result.map(transformComputer))
+  } yield ComputersOutput(result.map(toApiComputer))
 
   override def getComputer(id: Long): IO[Computer] = {
-    repository.fetch(id).map(transformComputer)
+    repository.fetch(id).map(toApiComputer)
   }
+
+  override def createComputer(payload: CreateComputerPayload): IO[Computer] = for {
+    newComputer <- repository.insert(fromApiComputer(payload))
+  } yield toApiComputer(newComputer)
 }
