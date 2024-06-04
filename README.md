@@ -1,37 +1,36 @@
 # Gatling Corp Scala interview project
 
-Thank you for applying to Gatling Corp. We use these small exercises in our hiring process.
-
-Please code as you would do in your everyday work. This code will be used to start a conversation about your practices.
-
-Please **do NOT fork this repository**.
-You should [use it as template (the green button)](https://github.com/gatling/scala-interview-project/generate) ([GitHub documentation](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)).
-Note: if you choose to make your repository private, add us as collaborators.
+Thank you for taking the time to review this test 🙇
 
 ## Getting started
 
-Tools:
+You are most likely more experienced than me in Scala and how this project works so I'm guessing that you don't help.
 
-- You need to install a JDK, version 8 or later (11 or 17 are fine too).
-- We recommend using [IntelliJ IDEA](https://www.jetbrains.com/fr-fr/idea/) (the free community edition is completely
-  sufficient) as an editor. You will need to install IntelliJ's official Scala plugin.
-- We include the `sbtx` script which can be used to build, run, or execute tests (using the SBT build tool), so you
-  don't need to install anything else. For instance, running `./sbtx "testOnly io.gatling.SanityCheckTest"` in the
-  project directory should successfully run this one test.
-- Note that your Scala code will be automatically formatted every time SBT compiles it.
+Anyhow, here's a little recap just in case :
 
-If you are new to Scala, here are some resources to help get you started quickly:
+### Running the tests
 
-- [A Scala Tutorial for Java Programmers](https://docs.scala-lang.org/tutorials/scala-for-java-programmers.html): a
-  selection of the most important things to know if you come from a Java (or similar language) background
-- [Tour of Scala](https://docs.scala-lang.org/tour/tour-of-scala.html): an introduction to all the main features of the
-  language
-- [Homepage for the official documentation](https://docs.scala-lang.org/) (note that we currently use Scala 2, not yet
-  Scala 3)
+```console
+sbt test
+```
 
-There are of course plenty of other learning resources to be found on the web, these are merely suggestions.
+### Starting the server
 
-## Pure Scala
+```console
+sbt run
+```
+
+You can then access the documentation API use this [url](http://localhost:9000/docs/index.html) and run queries
+
+## About the test
+
+I tried to split my work into differents commits so that you can follow my logic. Feel free to scroll through them [here](https://github.com/HugoFouques/scala-interview-project/commits/main/)
+
+I'm not very familiar with the Scala synthax so I took inspiration for various sources (Documentation, blogposts, github, ...). I tried to keep the resulting style as coherent as possible. Any suggestions on that part are very welcome!
+
+I added a error handling middleware so that the server doesn't always return 500s. It wasn't really asked but I was curious and I thought it could be an interesting topic to discuss.
+
+## The requirements 👇
 
 Create a "concat" method which takes 2 `Option[String]`s and concatenate their contents when both exist. A functional
 style is expected.
@@ -55,7 +54,7 @@ and run it in IntelliJ, or in your console:
 
 ## Computer Database Webapp
 
-The major library you'll need to use is [cats effect](https://typelevel.org/cats-effect/docs/2.x/getting-started). 
+The major library you'll need to use is [cats effect](https://typelevel.org/cats-effect/docs/2.x/getting-started).
 In this exercise, we'll use [Smithy4s](https://disneystreaming.github.io/smithy4s/) as well to generate the web server from documentation.
 New to effect systems? Take a look at this [talk](https://www.youtube.com/watch?v=qgfCmQ-2tW0).
 
@@ -64,6 +63,7 @@ You can find here the basis of the project. Feel free to modify the architecture
 The goal of this part is to create a web app that stores and reads data about computers in a file.
 
 A computer is represented by:
+
 - an id
 - a name
 - an optional introduced date
